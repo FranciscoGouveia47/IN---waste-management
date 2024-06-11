@@ -1765,7 +1765,7 @@ if Flag_FOD == True:
                         color='gray', linestyle='--', label='_nolegend_')
 
         ax.set_xlabel('time (years)')
-        ax.set_ylabel('CH4 emissions (tons)\')
+        ax.set_ylabel('CH4 produced (tons)')
         ax.set_title(f'Category {u + 1}: CH4 emissions over time')
 
         ax.grid(True)
