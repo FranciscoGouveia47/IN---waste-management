@@ -1,0 +1,106 @@
+Table 1: DOC contents;Unnamed: 1;Unnamed: 2;Unnamed: 3;Unnamed: 4;Unnamed: 5;Unnamed: 6;Unnamed: 7;Unnamed: 8;Unnamed: 9;Unnamed: 10;Unnamed: 11;Unnamed: 12;Unnamed: 13
+MSW component;Dry matter content in % of wet weight;DOC content in % of wet waste;;;DOC content in % of dry waste;;;Total carbon content in % of dry weight;;;Fossil carbon fraction in % of total carbon;;
+;Default;Default;Min;Max;Default;Min;Max;Default;Min;Max;Default;Min;Max
+Paper/Cardboard;90;40;36;45;44;40;50;46;42;50;1;0;5
+Textiles;80;24;20;40;30;25;50;50;25;50;20;0;50
+Food waste;40;15;8;20;38;20;50;38;20;50;-;-;-
+Wood;85;43;39;46;50;46;54;50;46;54;-;-;-
+Garden and Park waste;40;20;18;22;49;45;55;49;45;55;0;0;0
+Rubber and Leather;84;39;39;39;47;47;47;67;67;67;20;20;20
+Plastics;100;-;-;-;-;-;-;75;67;85;100;95;100
+Metal;100;-;-;-;-;-;-;;;;;;
+Glass;100;-;-;-;-;-;-;;;;;;
+Other, inert waste;90;-;-;-;-;-;-;3;0;5;100;50;100
+;;;;;;;;;;;;;
+Table 2.1: METHANE CORRECTION FACTORS (MCF);;;Table 2.2: Oxidation Factor (OX);;;Table 2.3: Correction factor for greenhouse gases (CO2eq);;;;;;;
+Type of Site;Methane Correction Factor (MCF) Default Values;;Type of Site;Oxidation Factor (OX) Default values;;Correction factor for 1Kg of CH4;25;;;;;;
+Managed (anaerobic);1;;Managed, unmanaged and uncategorised SWDS;0;;Correction factor for 1Kg of NO2;298;;;;;;
+Managed (semi-aerobic);0.5;;Managed covered with CH4 oxidising material;0.1;;;;;;;;;
+Unmanaged [deep ( >5 m waste) and /or high water table];0.8;;;;;;;;;;;;
+Unmanaged  [shallow (<5 m waste)];0.4;;;;;;;;;;;;
+;;;;;;;;;;;;;
+Table 3: RECOMMENDED DEFAULT HALF-LIFE VALUES (YR);;;;;;;;;;;;;
+Type of waste;"Boreal and Temperate 
+(MAT ≤ 20°C) ";;;;;;Tropical (MAT > 20°C);;;;;;
+;Dry (MAP/PET < 1);;;Wet (MAP/PET > 1);;;Dry (MAP < 1000 mm);;;Moist and Wet (MAP ≥ 1000 mm);;;
+;Default;Min;Max;Default;Min;Max;Default;Min;Max;Default;Min;Max;
+Paper/textiles waste;17;14;23;12;10;14;15;12;17;10;8;12;
+Wood/ straw waste;35;23;69;23;17;35;28;17;35;20;14;29;
+Other (non – food) organic putrescible/ Garden and park waste;14;12;17;7;6;9;11;9;14;4;3;5;
+Food waste/Sewage sludge;12;9;14;4;3;6;8;6;10;2;1;4;
+Bulk Waste;14;12;17;7;6;9;11;9;14;4;3;5;
+;;;;;;;;;;;;;
+Table 4: GHG emission factors for waste collection and transport;;;;;Table 7.1: CH4 EMISSION FACTORS FOR INCINERATION OF MSW;;;;;Table 7.2: N2O EMISSION FACTORS FOR INCINERATION OF MSW;;;
+Separately collected  waste;Separately collected metal to sorting and recycling;0.01;ton of CO2 (eq)/ton material;;Type of incineration/technology;;CH4 Emission Factors (kg/Gg waste incinerated on a wet weight basis);;;Type of incineration/technology;;N2O Emission Factors (kg/Gg waste incinerated on a wet weight basis);
+;Separately collected plastic to sorting and recycling;0.015;ton of CO2 (eq)/ton material;;Continuous incineration;;0.2;;;Continuous incineration;;47;
+;Separately collected paper/cardboard to sorting and recycling;0.01;ton of CO2 (eq)/ton material;;Semi-continuous incineration;;6;;;Semi-continuous incineration;;41;
+;Separately collected glass to sorting and recycling;0.01;ton of CO2 (eq)/ton material;;Batch type incineration;;60;;;Batch type incineration;;56;
+;Separately collected biowaste to composting;0.008;ton of CO2 (eq)/ton material;;;;;;;;;;
+;Separately collected biowaste to AD;0.008;ton of CO2 (eq)/ton material;;;;;;;;;;
+Mixed Waste;Mixed waste to MBT;0.009;ton of CO2 (eq)/ton material;;;;;;;;;;
+;Mixed waste to incineration;0.008;ton of CO2 (eq)/ton material;;;;;;;;;;
+;Mixed waste to landfill;0.007;ton of CO2 (eq)/ton material;;;;;;;;;;
+;;;;;;;;;;;;;
+Table 5: Composting Parameters (MSW);;;Table 5.1: Composting Parameters (SCW);;;;;;;;;;
+fraction of DOC that can decompose under anaerobic conditions (DODf);0.5;;fraction of DOC that can decompose under anaerobic conditions (DODf);0.5;;;;;;;;;
+Methane Correction Factor (MCF);0.01;;Methane Correction Factor (MCF);0.01;;;;;;;;;
+CO2/C mass ratio;3.6666666666666665;;CO2/C mass ratio;3.6666666666666665;;;;;;;;;
+CH4/C mass ratio;1.3333333333333333;;CH4/C mass ratio;1.3333333333333333;;;;;;;;;
+Oxidation Factor (OX);0;;Oxidation Factor (OX);0;;;;;;;;;
+fraction of CH4 in generated gas(F);0.5;;fraction of CH4 in generated gas(F);0.5;;;;;;;;;
+;;;;;;;;;;;;;
+Table 6: Anaerobic Digestion Parameters (MSW);;;Table 6.1: Anaerobic Digestion Parameters (SCW);;;;;;;;;;
+fraction of DOC that can decompose under anaerobic conditions (DODf);0.5;;fraction of DOC that can decompose under anaerobic conditions (DODf);0.5;;;;;;;;;
+Methane Correction Factor (MCF);1;;Methane Correction Factor (MCF);1;;;;;;;;;
+CO2/C mass ratio;3.6666666666666665;;CO2/C mass ratio;3.6666666666666665;;;;;;;;;
+CH4/C mass ratio;1.3333333333333333;;CH4/C mass ratio;1.3333333333333333;;;;;;;;;
+Oxidation Factor (OX);0;;Oxidation Factor (OX);0;;;;;;;;;
+Methane Recovery Factor (R);1;;Methane Recovery Factor (R);0.9;;;;;;;;;
+fraction of CH4 in generated gas(F);0.5;;fraction of CH4 in generated gas(F);0.5;;;;;;;;;
+;;;;;;;;;;;;;
+Table 7: Incineration Parameters;;;;;;;;;;;;;
+Incineration facility efficiency (%);21.2;;;;;;;;;;;;
+CO2/C mass ratio;3.6666666666666665;;;;;;;;;;;;
+Oxidation Factor (OX);1;;;;;;;;;;;;
+ Default CH4 emission factor (Kg/Gg MSW wet weight);60;;;;;;;;;;;;
+ Default N2O emission factor (Kg/Gg MSW wet weight);56;;;;;;;;;;;;
+;;;;;;;;;;;;;
+Table 8: Landfill Parameters;;;;;;;;;;;;;
+fraction of DOC that can decompose under anaerobic conditions (DODf);0.5;;;;;;;;;;;;
+Methane Correction Factor (MCF);0.5;;;;;;;;;;;;
+CO2/C mass ratio;3.6666666666666665;;;;;;;;;;;;
+CH4/C mass ratio;1.3333333333333333;;;;;;;;;;;;
+Oxidation Factor (OX);0.1;;;;;;;;;;;;
+Methane Recovery Factor (R);0.5;;;;;;;;;;;;
+fraction of CH4 in generated gas(F);0.5;;;;;;;;;;;;
+Fraction of collected methane flared;0.5;;;;;;;;;;;;
+Flare efficiency;0.45;;;;;;;;;;;;
+CO2/CH4 mass ratio;2.743765586034913;;;;;;;;;;;;
+;;;;;;;;;;;;;
+Table 9: Gasification Parameters;;;;;;;;;;;;;
+A;B;;;;;;;;;;;;
+;;;;;;;;;;;;;
+Table 10: Recycling Parameters;;;;;;;;;;;;;
+Type of waste;Emission factors (t CO2(eq)/t recycled material);Material recovery factors (t recycled material/t material recycled);Energy consumption factors(MJ/t material recycled);Emission factors for waste collection and transport (t CO2(eq)/t recycled material);;;;;;;;;
+Ferrous metal;-1.521;0.85;6;0.01;;;;;;;;;
+Non-ferrous metal;-9.108;0.9;20;0.01;;;;;;;;;
+PET;-0.53;0.75;40;0.015;;;;;;;;;
+HDPE;-1.8;0.8;50;0.015;;;;;;;;;
+Glass;-0.287;0.9;10;0.01;;;;;;;;;
+Paper/cardboard;-0.634;0.75;15;0.01;;;;;;;;;
+Biowaste (Food Waste);;;;;;;;;;;;;
+Biowaste (Wood);;;;;;;;;;;;;
+Biowaste (Garden and Park waste);;;;;;;;;;;;;
+;;;;;;;;;;;;;
+Table 11: DOC contents (SCW);;;;;;;;;;;;;
+Biowaste component;Dry matter content in % of wet weight;DOC content in % of wet waste;;;DOC content in % of dry waste;;;Total carbon content in % of dry weight;;;Fossil carbon fraction in % of total carbon;;
+;Default;Default;Min;Max;Default;Min;Max;Default;Min;Max;Default;Min;Max
+Ferrous metal;100;-;-;-;-;-;-;;;;;;
+Non-ferrous metal;100;-;-;-;-;-;-;;;;;;
+PET;100;-;-;-;-;-;-;75;67;85;100;95;100
+HDPE;100;-;-;-;-;-;-;75;67;85;100;95;100
+Glass;100;-;-;-;-;-;-;;;;;;
+Paper/cardboard;90;40;36;45;44;40;50;46;42;50;1;0;5
+Biowaste (Food Waste);40;15;8;20;38;20;50;38;20;50;-;-;-
+Biowaste (Wood);85;43;39;46;50;46;54;50;46;54;-;-;-
+Biowaste (Garden and Park waste);40;20;18;22;49;45;55;49;45;55;0;0;0
