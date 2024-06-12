@@ -1,19 +1,17 @@
-import matplotlib.pyplot as plt
+og_category_dic = {'Paper/Cardboard': 23.2,
+                   'Textiles': 3.9,
+                   'Food waste': 33.9}
 
-# Create a plot
-plt.plot([1, 2, 3], [4, 5, 6])
-plt.title('Sample Plot')
+category_names = ['Paper/Cardboard','blaaaa','Textiles',  'Food waste']
 
-# Try to maximize the figure window if in a GUI environment
-try:
-    manager = plt.get_current_fig_manager()
-    # Check if the backend is correctly set to one that supports the window attribute
-    if hasattr(manager, 'window'):
-        manager.window.state('zoomed')  # Maximize the figure window to full screen
+new_dict = {}
+
+for element in category_names:
+    if element in og_category_dic.keys():
+        new_dict[element] = og_category_dic[element]
     else:
-        print("The current backend does not support the 'window' attribute.")
-except Exception as e:
-    print(f"An error occurred while trying to maximize the window: {e}")
+        new_dict[element] = 0
 
-# Show plot
-plt.show()
+values = new_dict.values()
+
+print(values)

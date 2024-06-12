@@ -10,8 +10,10 @@ import xlwings as xw
 import shutil  # Import the shutil module for file operations
 from tkinter import ttk
 import matplotlib
+
 matplotlib.use('TkAgg')  # Use this backend or try other available backends
 import matplotlib.pyplot as plt
+
 
 def find_indices(matrix, target):
     """
@@ -184,7 +186,7 @@ for i in range(find_indices(inventory_data, 'B1')[0][0], find_indices(inventory_
 
 print()
 if percentage_total_SCW == 100 and round(mass_total_SCW, 3) == round(
-        inventory_data[find_indices(inventory_data, 'Sep. Collected Waste total mass (t)')[0][0]+1][0], 3):
+        inventory_data[find_indices(inventory_data, 'Sep. Collected Waste total mass (t)')[0][0] + 1][0], 3):
     print('Check 1B done')
 elif percentage_total_SCW != 100 and round(mass_total_SCW, 3) == round(inventory_data[47][0], 3):
     print('SCW percentage sum is not 100% =>' + str(percentage_total_SCW))
@@ -1641,7 +1643,27 @@ if Flag_FOD == True:
         # If conversion fails or FOD_data[1] is not available, set it to 0
         FOD_data[1] = 0
 
-    Bulk_percentage = [23.2, 3.9, 33.9, 8.2, 9.8, 1.4, 8.5, 4.6, 6.5]
+    og_category_dic = {'Paper/Cardboard': 23.2,
+                             'Textiles': 3.9,
+                             'Food waste': 33.9,
+                             'Wood': 8.2,
+                             'Garden and Park waste': 9.8,
+                             'Rubber and Leather': 1.4,
+                             'Plastics': 8.5,
+                             'Metal': 4.6,
+                             'Glass': 6.5}
+
+    Bulk_percentage_dic = {}
+
+    for element in category_names_MSW:
+        if element in og_category_dic.keys():
+            Bulk_percentage_dic[element] = og_category_dic[element]
+        else:
+            Bulk_percentage_dic[element] = 0
+
+    Bulk_percentage = list(Bulk_percentage_dic.values())
+
+
     FOD_DOC_in_site = []
     FOD_DDOC_mass0 = []
     for i in range(len(Bulk_percentage)):
