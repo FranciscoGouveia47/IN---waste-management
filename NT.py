@@ -51,6 +51,7 @@ def find_indices(matrix, target):
 directory_path_inventory = r'C:\Users\fgouv\PycharmProjects\IN+\Files'
 directory_path_assumptions = r'C:\Users\fgouv\PycharmProjects\IN+\Files'
 backup_directory = r'C:\Users\fgouv\PycharmProjects\IN+\Files\Backup'
+output_directory = r'C:\Users\fgouv\PycharmProjects\IN+\Files\Output'
 
 # Define the file names for each CSV file
 file_name_inventory_excel = 'Inventory_data.xlsx'
@@ -58,6 +59,7 @@ file_name_inventory = 'inventory_data.csv'
 file_name_assumptions_excel = 'Assumptions_data.xlsx'
 file_name_assumptions = 'Assumptions_data.csv'
 backup_file_name = 'inventory_data_backup.xlsx'
+output_file_name = 'output_data.csv'
 
 
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -196,163 +198,6 @@ else:
     sys.exit("Stopping execution. Failed Check 1B")
 
 print('-------------')
-
-
-# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-# @@@@@@@@@@User input@@@@@@@@@@User input@@@@@@@@@@User input@@@@@@@@@@User input@@@@@@@@@@User input@@@@@@@@@@User inp
-# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-class ConfirmationDialog(simpledialog.Dialog):
-    def __init__(self, parent, title, prompt):
-        self.prompt = prompt
-        self.result = None
-        super().__init__(parent, title=title)
-
-    def body(self, master):
-        tk.Label(master, text=self.prompt).pack()
-
-    def buttonbox(self):
-        box = tk.Frame(self)
-        tk.Button(box, text="Yes", command=self.yes_button_click).pack(side=tk.LEFT, padx=5)
-        tk.Button(box, text="No", command=self.no_button_click).pack(side=tk.LEFT, padx=5)
-        box.pack()
-
-    def yes_button_click(self):
-        self.result = "Yes"
-        self.destroy()
-
-    def no_button_click(self):
-        self.result = "No"
-        self.destroy()
-
-
-class InputDialog(simpledialog.Dialog):
-    def __init__(self, parent, title, prompts):
-        self.prompts = prompts
-        self.entries = []
-        super().__init__(parent, title=title)
-
-    def body(self, master):
-        # For the total mass field
-        tk.Label(master, text=self.prompts[0]).grid(row=0, column=0, sticky="e", padx=5)
-        entry1 = tk.Entry(master)
-        entry1.grid(row=0, column=1, padx=5, pady=5)
-        entry1.insert(tk.END, "%")
-        entry1.bind("<FocusIn>", lambda event, entry=entry1: self.on_entry_focus_in(entry1))
-        entry1.bind("<FocusOut>", lambda event, entry=entry1: self.on_entry_focus_out(entry1))
-        self.entries.append(entry1)
-
-        # For the rest of the categories
-        for i, prompt in enumerate(self.prompts[1:], start=1):
-            tk.Label(master, text=prompt).grid(row=i, column=0, sticky="e", padx=5)
-            entry = tk.Entry(master)
-            entry.grid(row=i, column=1, padx=5, pady=5)
-            entry.insert(tk.END, "%")
-            entry.bind("<FocusIn>", lambda event, entry=entry: self.on_entry_focus_in(entry))
-            entry.bind("<FocusOut>", lambda event, entry=entry: self.on_entry_focus_out(entry))
-            self.entries.append(entry)
-        return self.entries[0]  # Focus on the first entry
-
-    def on_entry_focus_in(self, entry):
-        if entry.get() == "%":
-            entry.delete(0, tk.END)
-
-    def on_entry_focus_out(self, entry):
-        if not entry.get():
-            entry.insert(tk.END, "%")
-
-    def apply(self):
-        self.result = []
-
-        for entry in self.entries:
-            value = entry.get().rstrip("%")  # Remove "%" symbol
-            try:
-                # Convert the value to a float, assuming it's 0 if empty
-                value = float(value) if value else 0
-            except ValueError:
-                tk.messagebox.showerror("Error", "Please enter valid numeric values.")
-                return None  # If there is an error, return None to cancel the dialog
-
-            self.result.append(value)
-
-        # Check conditions and force stop if necessary
-        if self.result[0] == 0:
-            tk.messagebox.showerror("Error", "The first value cannot be 0.")
-            os._exit(1)  # Exit the script
-
-        if round(sum(self.result[1:]), 3) != 100:
-            tk.messagebox.showerror("Error", "The sum of percentages must be 100. Please try again.")
-            os._exit(1)  # Exit the script
-
-
-# Create the main application window
-root = tk.Tk()
-root.withdraw()  # Hide the main window
-
-# Ask the user whether to proceed
-confirmation_dialog = ConfirmationDialog(root, "Confirmation",
-                                         "Do you want to change the inventory data manually? (Not recommended for beginners)")
-confirmation_choice = confirmation_dialog.result
-
-# If the user chooses "Yes," proceed with the data entry
-if confirmation_choice == "Yes":
-    # Define the prompts for each entry field
-    prompts = [
-        "Total Mass (t):", "Paper/Cardboard:", "Textiles:", "Food waste:",
-        "Wood:", "Garden and Park waste:", "Rubber and Leather:",
-        "Plastics:", "Metal:", "Glass:"
-    ]
-
-    # Create a custom pop-up window with eight entry fields, compact layout
-    dialog = InputDialog(root, "Enter Values", prompts)
-    values = dialog.result
-
-    # Display the entered values in the console or show an error message
-    if values is not None:
-        print("Entered values:", values)
-    else:
-        print("Data entry canceled or closed without entering valid values.")
-
-    mass_total_MSW = float(values[0])
-    mass_percentage_MSW = list(map(float, values[1:]))
-
-    # Update the CSV file with the new mass_total and mass_percentage values
-    inventory_data[1][0] = mass_total_MSW  # Assuming the mass_total value is in the second row and first column
-
-    # Assuming that mass_percentage values start from the second column
-    for i, value in enumerate(mass_percentage_MSW):
-        inventory_data[i + 1][4] = value
-
-    if not os.path.exists(backup_directory):
-        os.makedirs(backup_directory)
-
-    # Copy the original Excel file to the backup directory
-    shutil.copy(os.path.join(directory_path_inventory, file_name_inventory_excel),
-                os.path.join(backup_directory, backup_file_name))
-
-    # Open the Excel file using xlwings
-    wb = xw.Book(os.path.join(directory_path_inventory, file_name_inventory_excel))
-
-    # Access the sheet where the changes were made
-    sheet = wb.sheets['inventory_data']
-
-    # Update the corresponding cell in Excel
-    sheet.range('A2').value = mass_total_MSW  # Assuming the mass_total value is in cell B2
-
-    # Assuming that mass_percentage values start from cell E2 (5th column)
-    for i, value in enumerate(mass_percentage_MSW):
-        sheet.range((2 + i, 5)).value = value
-
-    # Save the changes in Excel
-    wb.save()
-
-    # Close the Excel file
-    wb.close()
-
-    # Reload the CSVs
-    df_inventory = pd.read_excel(os.path.join(directory_path_inventory, file_name_inventory_excel))
-
-    # Convert DataFrame to CSV with semicolon as the separator
-    df_inventory.to_csv(os.path.join(directory_path_inventory, file_name_inventory), index=False, sep=';')
 
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 # @@@@@@@@@DATA RELOAD@@@@@@@@@DATA RELOAD@@@@@@@@@DATA RELOAD@@@@@@@@@DATA RELOAD@@@@@@@@@DATA RELOAD@@@@@@@@@DATA RELO
@@ -1644,14 +1489,14 @@ if Flag_FOD == True:
         FOD_data[1] = 0
 
     og_category_dic = {'Paper/Cardboard': 23.2,
-                             'Textiles': 3.9,
-                             'Food waste': 33.9,
-                             'Wood': 8.2,
-                             'Garden and Park waste': 9.8,
-                             'Rubber and Leather': 1.4,
-                             'Plastics': 8.5,
-                             'Metal': 4.6,
-                             'Glass': 6.5}
+                       'Textiles': 3.9,
+                       'Food waste': 33.9,
+                       'Wood': 8.2,
+                       'Garden and Park waste': 9.8,
+                       'Rubber and Leather': 1.4,
+                       'Plastics': 8.5,
+                       'Metal': 4.6,
+                       'Glass': 6.5}
 
     Bulk_percentage_dic = {}
 
@@ -1662,7 +1507,6 @@ if Flag_FOD == True:
             Bulk_percentage_dic[element] = 0
 
     Bulk_percentage = list(Bulk_percentage_dic.values())
-
 
     FOD_DOC_in_site = []
     FOD_DDOC_mass0 = []
@@ -1905,6 +1749,131 @@ else:
     print('Energy recovery: System does not have an energy recovery component')
 print('---------------------------------------------------------------------------------------------------------------')
 
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+# @@@@@@@@@Output files@@@@@@@@@Output files@@@@@@@@@Output files@@@@@@@@@Output files@@@@@@@@@Output files@@@@@@@@@Outp
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+file_output_path = os.path.join(output_directory, output_file_name)
+# Check if the directory exists, if not, create it
+if not os.path.exists(output_directory):
+    os.makedirs(output_directory)
+
+with open(file_output_path, mode='w', newline='') as file:
+    writer = csv.writer(file)
+
+    # Recycling Results
+    writer.writerow(['Recycling Results------------------------------------------------------------------------------'])
+    writer.writerow(['Category', 'Emissions (Tons of CO2 eq.)', 'Material Recovery (Tons)', 'Energy Consumption (MJ)'])
+    for i in range(len(category_names_SCW)):
+        writer.writerow(
+            [category_names_SCW[i], round(recycling_emissions[i], 3), round(recycling_material_recovery[i], 3),
+             round(recycling_energy_consumption[i], 3)])
+    writer.writerow(['Overall Total', round(sum(recycling_emissions), 3), round(sum(recycling_material_recovery), 3),
+                     round(sum(recycling_energy_consumption), 3)])
+    writer.writerow([])
+
+    # Composting Results
+    writer.writerow([])
+    writer.writerow(['Composting Results-----------------------------------------------------------------------------'])
+    writer.writerow(['MSW Results'])
+    writer.writerow(['Category', 'Emissions (Tons of CO2 eq.)', 'Material Recovery (Tons of compost)'])
+    for i in range(len(category_names_MSW)):
+        writer.writerow([category_names_MSW[i], round(Comp_CO2_eq_MSW[i], 3), round(Comp_compost_mass_MSW[i], 3)])
+    writer.writerow([])
+    writer.writerow(['Transport emissions', round(Comp_transp_emissions_MSW, 3)])
+
+    writer.writerow([])
+    writer.writerow(['SCW Results'])
+    writer.writerow(['Category', 'Emissions (Tons of CO2 eq.)', 'Material Recovery (Tons of compost)'])
+    for i in range(len(category_names_SCW)):
+        writer.writerow([category_names_SCW[i], round(Comp_CO2_eq_SCW[i], 3), round(Comp_compost_mass_SCW[i], 3)])
+    writer.writerow([])
+    writer.writerow(['Transport emissions', round(Comp_transp_emissions_SCW, 3)])
+
+    writer.writerow([])
+    writer.writerow(['Overall Results'])
+    writer.writerow(['', 'Average', 'Min', 'Max'])
+    writer.writerow(['GHG Emissions:',
+                     round(sum(Comp_CO2_eq_MSW) + sum(
+                         Comp_CO2_eq_SCW) + Comp_transp_emissions_MSW + Comp_transp_emissions_SCW, 3),
+                     round(sum(Comp_CO2_eq_min_MSW) + sum(
+                         Comp_CO2_eq_min_SCW) + Comp_transp_emissions_MSW + Comp_transp_emissions_SCW, 3),
+                    round(sum(Comp_CO2_eq_max_MSW) + sum(
+                        Comp_CO2_eq_max_SCW) + Comp_transp_emissions_MSW + Comp_transp_emissions_SCW, 3)])
+    writer.writerow(['Material Recovery:',
+                     round(sum(Comp_compost_mass_MSW) + sum(Comp_compost_mass_SCW), 3),
+                     round(sum(Comp_compost_mass_min_MSW) + sum(Comp_compost_mass_min_SCW), 3),
+                     round(sum(Comp_compost_mass_max_MSW) + sum(Comp_compost_mass_max_SCW), 3)])
+
+    # Anaerobic Digestion Results
+    writer.writerow([])
+    writer.writerow(['Anaerobic Digestion Results--------------------------------------------------------------------'])
+    writer.writerow(['MSW Results'])
+    writer.writerow(
+        ['Category', 'Emissions (Tons of CO2 eq.)', 'Material Recovery (Tons of digestate)', 'Recovered CH4 (tons)'])
+    for i in range(len(category_names_MSW)):
+        writer.writerow([category_names_MSW[i], round(AD_CO2_eq_MSW[i], 3), round(AD_digestate_mass_MSW[i], 3),
+                         round(AD_CH4_recovered_MSW[i], 3)])
+    writer.writerow([])
+    writer.writerow(['Transport emissions', round(AD_transp_emissions_MSW, 3)])
+
+    writer.writerow([])
+    writer.writerow(['SCW Results'])
+    writer.writerow(
+        ['Category', 'Emissions (Tons of CO2 eq.)', 'Material Recovery (Tons of digestate)', 'Recovered CH4 (tons)'])
+    for i in range(len(category_names_SCW)):
+        writer.writerow([category_names_SCW[i], round(AD_CO2_eq_SCW[i], 3), round(AD_digestate_mass_SCW[i], 3),
+                         round(AD_CH4_recovered_SCW[i], 3)])
+    writer.writerow([])
+    writer.writerow(['Transport emissions', round(AD_transp_emissions_SCW, 3)])
+
+    writer.writerow([])
+    writer.writerow(['Overall Results'])
+    writer.writerow(['', 'Average', 'Min', 'Max'])
+    writer.writerow(['GHG Emissions:',
+                     round(sum(AD_CO2_eq_MSW) + sum(AD_CO2_eq_SCW) + AD_transp_emissions_MSW + AD_transp_emissions_SCW,
+                           3),
+                     round(sum(AD_CO2_eq_min_MSW) + sum(
+                         AD_CO2_eq_min_SCW) + AD_transp_emissions_MSW + AD_transp_emissions_SCW, 3),
+                     round(sum(AD_CO2_eq_max_MSW) + sum(
+                         AD_CO2_eq_max_SCW) + AD_transp_emissions_MSW + AD_transp_emissions_SCW, 3)])
+    writer.writerow(['Material Recovery:',
+                     round(sum(AD_digestate_mass_MSW) + sum(AD_digestate_mass_SCW), 3),
+                     round(sum(AD_digestate_mass_min_MSW) + sum(AD_digestate_mass_min_SCW), 3),
+                     round(sum(AD_digestate_mass_max_MSW) + sum(AD_digestate_mass_max_SCW), 3)])
+    writer.writerow(['CH4 Recovery:',
+                     round(sum(AD_CH4_recovered_MSW) + sum(AD_CH4_recovered_SCW), 3),
+                     round(sum(AD_CH4_recovered_min_MSW) + sum(AD_CH4_recovered_min_SCW), 3),
+                     round(sum(AD_CH4_recovered_max_MSW) + sum(AD_CH4_recovered_max_SCW), 3)])
+
+    # Landfill Results
+    writer.writerow([])
+    writer.writerow(['Landfill Results-------------------------------------------------------------------------------'])
+    writer.writerow(['Category', 'Emissions (Tons of CO2 eq.)', 'Recovered CH4 (tons)'])
+    for i in range(len(category_names_MSW)):
+        writer.writerow([category_names_MSW[i], round(LF_CO2_eq[i], 3), round(LF_CH4_recovered[i], 3)])
+    writer.writerow([])
+    writer.writerow(['Transport emissions', round(LF_transp_emissions, 3)])
+
+    writer.writerow([])
+    writer.writerow(['Overall Results'])
+    writer.writerow(['', 'Average', 'Min', 'Max'])
+    writer.writerow(
+        ['GHG Emissions:', round(sum(LF_CO2_eq), 3), round(sum(LF_CO2_eq_min), 3), round(sum(LF_CO2_eq_max), 3)])
+    writer.writerow(['Material Recovery:', round(sum(LF_CH4_recovered), 3), round(sum(LF_CH4_recovered_min), 3),
+                     round(sum(LF_CH4_recovered_max), 3)])
+
+    # Incineration Results
+    writer.writerow([])
+    writer.writerow(['Incineration Results---------------------------------------------------------------------------'])
+    writer.writerow(['GHG Emissions (Fossil Carbon)', round(INC_total_emissions, 3)])
+    writer.writerow(['GHG Emissions (Total Carbon content)', round(INC_total_emissions_all_C, 3)])
+    if INC_flag:
+        writer.writerow(['Energy Recovery', round(INC_energy_recovered, 3)])
+    else:
+        writer.writerow(['Energy Recovery', 'System does not have an energy recovery component'])
+
+print('CSV file created successfully.')
+
 
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 # @@@@@@@@@Backup end@@@@@@@@@Backup end@@@@@@@@@Backup end@@@@@@@@@Backup end@@@@@@@@@Backup end@@@@@@@@@Backup end@@@@
@@ -1919,11 +1888,16 @@ def Backup_choice():
     result = messagebox.askyesno("Backup settings",
                                  "The simulation is over. Do you wish for the Active data to become the new backup stage?")
     if result:
-        # Overwrite the backup file with the current inventory_data file
+        # Ensure backup directory exists; create if it doesn't
+        if not os.path.exists(backup_directory):
+            os.makedirs(backup_directory)
+
+        # Copy the inventory file to the backup directory
         shutil.copy(os.path.join(directory_path_inventory, file_name_inventory_excel),
                     os.path.join(backup_directory, backup_file_name))
+
         # Display a pop-up window with a message
-        messagebox.showinfo("Backup settings", "Original Backup overwriten by Main directory File")
+        messagebox.showinfo("Backup settings", "Original Backup overwritten by Main directory File")
     else:
         # Display a pop-up window with a message
         messagebox.showinfo("Backup settings", "Original Backup File kept")
@@ -1931,10 +1905,7 @@ def Backup_choice():
     # Destroy the tkinter main window in both branches
     root.destroy()
 
+    # Call the Backup_choice() function
 
-# Call the Backup_choice() function
+
 Backup_choice()
-
-# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-# @@@@@@@@@Output files@@@@@@@@@Output files@@@@@@@@@Output files@@@@@@@@@Output files@@@@@@@@@Output files@@@@@@@@@Outp
-# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@

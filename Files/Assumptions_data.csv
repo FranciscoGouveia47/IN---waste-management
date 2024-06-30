@@ -20,8 +20,7 @@ Unmanaged [deep ( >5 m waste) and /or high water table];0.8;;;;;;;;;;;;
 Unmanaged  [shallow (<5 m waste)];0.4;;;;;;;;;;;;
 ;;;;;;;;;;;;;
 Table 3: RECOMMENDED DEFAULT HALF-LIFE VALUES (YR);;;;;;;;;;;;;
-Type of waste;"Boreal and Temperate 
-(MAT ≤ 20°C) ";;;;;;Tropical (MAT > 20°C);;;;;;
+Type of waste;Boreal and Temperate (MAT ≤ 20°C) ;;;;;;Tropical (MAT > 20°C);;;;;;
 ;Dry (MAP/PET < 1);;;Wet (MAP/PET > 1);;;Dry (MAP < 1000 mm);;;Moist and Wet (MAP ≥ 1000 mm);;;
 ;Default;Min;Max;Default;Min;Max;Default;Min;Max;Default;Min;Max;
 Paper/textiles waste;17;14;23;12;10;14;15;12;17;10;8;12;
@@ -59,7 +58,7 @@ Methane Recovery Factor (R);1;;Methane Recovery Factor (R);0.9;;;;;;;;;
 fraction of CH4 in generated gas(F);0.5;;fraction of CH4 in generated gas(F);0.5;;;;;;;;;
 ;;;;;;;;;;;;;
 Table 7: Incineration Parameters;;;;;;;;;;;;;
-Incineration facility efficiency (%);21.2;;;;;;;;;;;;
+Energy recovery efficiency (%);21.2;;;;;;;;;;;;
 CO2/C mass ratio;3.6666666666666665;;;;;;;;;;;;
 Oxidation Factor (OX);1;;;;;;;;;;;;
  Default CH4 emission factor (Kg/Gg MSW wet weight);60;;;;;;;;;;;;
