@@ -1,0 +1,106 @@
+Recycling Results------------------------------------------------------------------------------
+Category,Emissions (Tons of CO2 eq.),Material Recovery (Tons),Energy Consumption (MJ)
+Ferrous metal,-1511.0,850.0,6000.0
+Non-ferrous metal,-112314.81,11110.5,246900.0
+PET,-11330.0,16500.0,880000.0
+HDPE,-221.34,99.2,6200.0
+Glass,-1385.0,4500.0,50000.0
+Paper/Cardboard,-1123.2,1350.0,27000.0
+Biowaste (Food Waste),0.0,0.0,0.0
+Biowaste (Wood),0.0,0.0,0.0
+Biowaste (Garden and Park waste),0.0,0.0,0.0
+Overall Total,-127885.35,34409.7,1216100.0
+
+
+Composting Results-----------------------------------------------------------------------------
+MSW Results
+Category,Emissions (Tons of CO2 eq.),Material Recovery (Tons of compost)
+Paper/Cardboard,11085.539,3818.178
+Textiles,0.0,0.0
+Food waste,5616.673,2479.998
+Wood,1427.683,386.363
+Garden and Park waste,13168.277,3709.087
+Rubber and Leather,0.0,0.0
+Plastics,0.0,0.0
+Metal,0.0,0.0
+Glass,0.0,0.0
+
+Transport emissions,330.0
+
+SCW Results
+Category,Emissions (Tons of CO2 eq.),Material Recovery (Tons of compost)
+Ferrous metal,0.0,0.0
+Non-ferrous metal,0.0,0.0
+PET,0.0,0.0
+HDPE,0.0,0.0
+Glass,0.0,0.0
+Paper/Cardboard,292.659,100.8
+Biowaste (Food Waste),898.669,396.8
+Biowaste (Wood),6281.812,1700.0
+Biowaste (Garden and Park waste),0.0,0.0
+
+Transport emissions,46.4
+
+Overall Results
+,Average,Min,Max
+GHG Emissions:,39147.71,33335.393,44985.96
+Material Recovery:,12591.226,11011.264,14164.17
+
+Anaerobic Digestion Results--------------------------------------------------------------------
+MSW Results
+Category,Emissions (Tons of CO2 eq.),Material Recovery (Tons of digestate),Recovered CH4 (tons)
+Paper/Cardboard,0.0,3818.178,999.999
+Textiles,0.0,0.0,0.0
+Food waste,0.0,1352.726,276.363
+Wood,0.0,0.0,0.0
+Garden and Park waste,0.0,927.272,296.969
+Rubber and Leather,0.0,0.0,0.0
+Plastics,0.0,0.0,0.0
+Metal,0.0,0.0,0.0
+Glass,0.0,0.0,0.0
+
+Transport emissions,158.182
+
+SCW Results
+Category,Emissions (Tons of CO2 eq.),Material Recovery (Tons of digestate),Recovered CH4 (tons)
+Ferrous metal,0.0,0.0,0.0
+Non-ferrous metal,0.0,0.0,0.0
+PET,0.0,0.0,0.0
+HDPE,0.0,0.0,0.0
+Glass,0.0,0.0,0.0
+Paper/Cardboard,0.0,0.0,0.0
+Biowaste (Food Waste),304.0,595.2,109.44
+Biowaste (Wood),1770.833,2125.0,637.5
+Biowaste (Garden and Park waste),0.0,0.0,0.0
+
+Transport emissions,59.2
+
+Overall Results
+,Average,Min,Max
+GHG Emissions:,2292.215,2006.548,2529.882
+Material Recovery:,8818.376,7753.176,9899.357
+CH4 Recovery:,2320.272,1971.371,2665.832
+
+Landfill Results-------------------------------------------------------------------------------
+Category,Emissions (Tons of CO2 eq.),Recovered CH4 (tons)
+Paper/Cardboard,0.0,0.0
+Textiles,7269.381,218.182
+Food waste,0.0,0.0
+Wood,482.732,14.489
+Garden and Park waste,0.0,0.0
+Rubber and Leather,1793.72,53.836
+Plastics,0.0,0.0
+Metal,0.0,0.0
+Glass,0.0,0.0
+
+Transport emissions,365.909
+
+Overall Results
+,Average,Min,Max
+GHG Emissions:,9545.833,8295.651,14430.705
+Material Recovery:,286.507,248.984,433.12
+
+Incineration Results---------------------------------------------------------------------------
+GHG Emissions (Fossil Carbon),17891.613
+GHG Emissions (Total Carbon content),68214.74
+Energy Recovery,System does not have an energy recovery component
