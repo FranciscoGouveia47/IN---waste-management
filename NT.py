@@ -17,7 +17,7 @@ matplotlib.use('TkAgg')  # Use this backend or try other available backends
 import matplotlib.pyplot as plt
 
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-# @@@@@@@@@@@@ INTIAL BACKUP CHECK @@@@@@@@@@@ INTIAL BACKUP CHECK @@@@@@@@@@@ INTIAL BACKUP CHECK @@@@@@@@@@@ INTIAL BA
+# @@@@@@@@@@@@ DIRECTORY AND FILES PATHS @@@@@@@@@@@@ DIRECTORY AND FILES PATHS @@@@@@@@@@@@ DIRECTORY AND FILES PATHS @
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 # Define the path for the directive file
@@ -127,36 +127,6 @@ except FileNotFoundError as e:
 # @@@@@@@@@@@@ INTIAL BACKUP CHECK @@@@@@@@@@@ INTIAL BACKUP CHECK @@@@@@@@@@@ INTIAL BACKUP CHECK @@@@@@@@@@@ INTIAL BAC
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-def find_indices(matrix, target):
-    """
-    Find the indices of all occurrences of a target value in a 2D matrix.
-
-    This function iterates through each element in a 2D matrix and returns a list of tuples,
-    each containing the row and column indices where the target value is found.
-
-    Parameters:
-    matrix (list of list of int/float/str): The 2D matrix to search through.
-    target (int/float/str): The value to find in the matrix.
-
-    Returns:
-    list of tuple: A list of tuples, where each tuple contains the row index and column index
-    of an occurrence of the target value in the matrix.
-
-    Example:
-    >>> matrix = [
-    ...     [1, 2, 3],
-    ...     [4, 5, 6],
-    ...     [7, 8, 3]
-    ... ]
-    >>> find_indices(matrix, 3)
-    [(0, 2), (2, 2)]
-    """
-    indices = []
-    for i, row in enumerate(matrix):
-        for j, value in enumerate(row):
-            if value == target:
-                indices.append((i, j))
-    return indices
 
 def Inventory_File_conflict():
     """
@@ -249,6 +219,39 @@ for i in range(len(assumptions_data)):
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 # @@@@@@ check 1 @@@@@@@@@@@@ check 1 @@@@@@@@@@@@ check 1 @@@@@@@@@@@@@ check 1 @@@@@@@@@@@ check 1 @@@@@@@@@@@@@@@@@@@
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+def find_indices(matrix, target):
+    """
+    Find the indices of all occurrences of a target value in a 2D matrix.
+
+    This function iterates through each element in a 2D matrix and returns a list of tuples,
+    each containing the row and column indices where the target value is found.
+
+    Parameters:
+    matrix (list of list of int/float/str): The 2D matrix to search through.
+    target (int/float/str): The value to find in the matrix.
+
+    Returns:
+    list of tuple: A list of tuples, where each tuple contains the row index and column index
+    of an occurrence of the target value in the matrix.
+
+    Example:
+    >>> matrix = [
+    ...     [1, 2, 3],
+    ...     [4, 5, 6],
+    ...     [7, 8, 3]
+    ... ]
+    >>> find_indices(matrix, 3)
+    [(0, 2), (2, 2)]
+    """
+    indices = []
+    for i, row in enumerate(matrix):
+        for j, value in enumerate(row):
+            if value == target:
+                indices.append((i, j))
+    return indices
+
+
 mass_percentage_MSW = []
 percentage_total_MSW = 0
 mass_total_MSW = 0
