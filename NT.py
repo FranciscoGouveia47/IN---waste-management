@@ -82,7 +82,7 @@ def get_user_directives():
         directory_path_inventory = open_directory_dialog()
 
         # Check if required files exist in the inventory directory
-        if not check_files_exist(directory_path_inventory, [file_name_inventory_excel, file_name_inventory]):
+        if not check_files_exist(directory_path_inventory, [file_name_inventory_excel]):
             raise FileNotFoundError("Required files not found in the inventory directory. Please check and retry.")
 
         # Assign assumptions directory as the same as inventory for simplicity
@@ -117,7 +117,7 @@ try:
     output_directory = config['output_directory']
 
     # Use the check_files_exist function to verify assumptions directory files
-    if not check_files_exist(directory_path_assumptions, [file_name_assumptions_excel, file_name_assumptions]):
+    if not check_files_exist(directory_path_assumptions, [file_name_assumptions_excel]):
         raise FileNotFoundError("Required files not found in the assumptions directory. Please check and retry.")
 
     # Proceed with your code execution
