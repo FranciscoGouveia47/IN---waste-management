@@ -13,6 +13,7 @@ import xlwings as xw
 import shutil  # Import the shutil module for file operations
 from tkinter import ttk
 import matplotlib
+
 matplotlib.use('TkAgg')  # Use this backend or try other available backends
 import matplotlib.pyplot as plt
 
@@ -29,11 +30,13 @@ file_name_inventory = 'inventory_data.csv'
 file_name_assumptions_excel = 'Assumptions_data.xlsx'
 file_name_assumptions = 'Assumptions_data.csv'
 backup_file_name = 'inventory_data_backup.xlsx'
+backup_file2_name = 'Assumptions_data_backup.xlsx'
 
 # Get the current timestamp
 current_time = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 # Create a new file name with timestamp
 output_file_name = f'output_data_{current_time}.csv'
+
 
 def check_files_exist(directory_path, file_names):
     """
@@ -52,6 +55,7 @@ def check_files_exist(directory_path, file_names):
             print(f"File '{file_name}' not found in directory '{directory_path}'.")
             return False
     return True
+
 
 def get_user_directives():
     """
@@ -101,6 +105,7 @@ def get_user_directives():
 
     return config
 
+
 try:
     # Get the user's directives
     config = get_user_directives()
@@ -123,12 +128,12 @@ except FileNotFoundError as e:
     # Handle the error as needed, e.g., exit the program or prompt the user
     # to correct the directories/files.
 
+
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 # @@@@@@@@@@@@ INTIAL BACKUP CHECK @@@@@@@@@@@ INTIAL BACKUP CHECK @@@@@@@@@@@ INTIAL BACKUP CHECK @@@@@@@@@@@ INTIAL BAC
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-
-def Inventory_File_conflict():
+def Backup_File_conflict():
     """
     Handle conflict between main and backup inventory files.
     """
@@ -136,12 +141,15 @@ def Inventory_File_conflict():
     root = tk.Tk()
     root.withdraw()  # Hide the main window
 
-    result = messagebox.askyesno("Inventory File conflict",
-                                 "There is a backup file in the backup folder. Do you wish to overwrite the active file (Main directory) with the backup?")
+    result = messagebox.askyesno("Backup Files conflict",
+                                 "There are backup files in the backup folder. Do you wish to overwrite the active files (Main directory) with the backups?")
     if result:
         # Replace the main Excel file with the backup data
         shutil.copy(os.path.join(backup_directory, backup_file_name),
                     os.path.join(directory_path_inventory, file_name_inventory_excel))
+        # Replace the main Excel file with the backup data
+        shutil.copy(os.path.join(backup_directory, backup_file2_name),
+                    os.path.join(directory_path_inventory, file_name_assumptions_excel))
         # Display a pop-up window with a message
         messagebox.showinfo("Inventory File conflict", "Main directory File overwriten by backup")
     else:
@@ -158,7 +166,7 @@ if os.path.exists(os.path.join(backup_directory, backup_file_name)):
     root.withdraw()  # Hide the main window
 
     # Call the function to ask for confirmation
-    Inventory_File_conflict()
+    Backup_File_conflict()
 
     root.destroy()
 
@@ -215,6 +223,7 @@ for i in range(len(assumptions_data)):
                 assumptions_data[i][j] = float(assumptions_data[i][j].replace(',', '.'))
             except ValueError:
                 pass  # If both conversion attempts fail, leave the value as is
+
 
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 # @@@@@@ check 1 @@@@@@@@@@@@ check 1 @@@@@@@@@@@@ check 1 @@@@@@@@@@@@@ check 1 @@@@@@@@@@@ check 1 @@@@@@@@@@@@@@@@@@@
@@ -1538,7 +1547,7 @@ Flag_FOD = False
 FOD_Landfill()
 
 if Flag_FOD == True:
-    Flag_FOD = False
+    global FOD_CH4_emissions, y_plot, FOD_CH4_recovered, FOD_CH4_flared, t_plot, FOD_CO2eq
     Reaction_rate_constant = [[0] * len(Half_life[0]) for _ in range(len(Half_life))]
     for i in range(len(Half_life)):
         for j in range(len(Half_life[0])):
@@ -1553,6 +1562,8 @@ if Flag_FOD == True:
 
     FOD_waste_mass = []
     for i in range(len(waste_data)):
+        if waste_data[i] == []:
+            waste_data[i] = [0] * (len(category_names_MSW) + 1)
         row = []
         for j in range(1, len(waste_data[0])):
             row.append(waste_data[i][0] * waste_data[i][j] / 100)
@@ -1675,20 +1686,40 @@ if Flag_FOD == True:
         y_plot.append(row)
 
     FOD_CH4_emissions = []
-
+    FOD_CH4_recovered = []
+    FOD_CH4_flared = []
+    FOD_CO2eq = []
     for i in range(len(y_plot)):
         dif2 = []
+        rec2 = []
+        flar2 = []
+        co2 = []
         for j in range(len(y_plot[i])):
             dif1 = []
+            rec1 = []
+            flar1 = []
+            co1 = []
             for m in range(1, len(y_plot[i][j])):
                 # Calculate the time interval between data points
                 time_interval = t_plot[j][m] - t_plot[j][m - 1]
                 # Compute the difference in DDOC mass between consecutive points and convert to CH4 emissions
                 difference = abs(y_plot[i][j][m] - y_plot[i][j][m - 1]) * table8_assumptions[6] * (
                         16 / 12) / time_interval
+                recovered = difference * table8_assumptions[5]
+                flared = difference * table8_assumptions[7] * table8_assumptions[8]
+                equiv = (difference - recovered - flared) * table23_assumptions[0] + flared * table8_assumptions[9]
                 dif1.append(difference)
+                rec1.append(recovered)
+                flar1.append(flared)
+                co1.append(equiv)
             dif2.append(dif1)
+            rec2.append(rec1)
+            flar2.append(flar1)
+            co2.append(co1)
         FOD_CH4_emissions.append(dif2)
+        FOD_CH4_recovered.append(rec2)
+        FOD_CH4_flared.append(flar2)
+        FOD_CO2eq.append(co2)
 
     fig1, axes1 = plt.subplots(2, 4, figsize=(16, 9))  # Increase figure size for better spacing
     axes1 = axes1.flatten()
@@ -1731,6 +1762,50 @@ if Flag_FOD == True:
         ax.set_xlabel('time (years)')
         ax.set_ylabel('CH4 produced (tons)')
         ax.set_title(f'Category {u + 1}: CH4 emissions over time')
+
+        ax.grid(True)
+
+    plt.tight_layout(pad=2.5)  # Increase padding between subplots
+    plt.get_current_fig_manager().window.state('zoomed')  # Maximize the figure window to full screen
+
+    # Plotting the third set of data (CH4 recovered)
+    fig3, axes3 = plt.subplots(2, 4, figsize=(16, 9))  # Increase figure size for better spacing
+    axes3 = axes3.flatten()
+
+    for u, ax in enumerate(axes3):
+        for i, y in enumerate(FOD_CH4_recovered[u]):
+            ax.plot(t_plot[i][:-1], y, marker='o', markersize=2)
+
+            # Connect consecutive segments with dashed lines
+            if i > 0:
+                ax.plot(t_plot[i - 1][-1], FOD_CH4_recovered[u][i - 1][-1], t_plot[i][0], FOD_CH4_recovered[u][i][0],
+                        color='gray', linestyle='--', label='_nolegend_')
+
+        ax.set_xlabel('time (years)')
+        ax.set_ylabel('CH4 recovered (tons)')
+        ax.set_title(f'Category {u + 1}: CH4 Recovered over time')
+
+        ax.grid(True)
+
+    plt.tight_layout(pad=2.5)  # Increase padding between subplots
+    plt.get_current_fig_manager().window.state('zoomed')  # Maximize the figure window to full screen
+
+    # Plotting the forth set of data (CH4 flared)
+    fig4, axes4 = plt.subplots(2, 4, figsize=(16, 9))  # Increase figure size for better spacing
+    axes4 = axes4.flatten()
+
+    for u, ax in enumerate(axes4):
+        for i, y in enumerate(FOD_CH4_flared[u]):
+            ax.plot(t_plot[i][:-1], y, marker='o', markersize=2)
+
+            # Connect consecutive segments with dashed lines
+            if i > 0:
+                ax.plot(t_plot[i - 1][-1], FOD_CH4_flared[u][i - 1][-1], t_plot[i][0], FOD_CH4_flared[u][i][0],
+                        color='gray', linestyle='--', label='_nolegend_')
+
+        ax.set_xlabel('time (years)')
+        ax.set_ylabel('CH4 flared (tons)')
+        ax.set_title(f'Category {u + 1}: CH4 Flared over time')
 
         ax.grid(True)
 
@@ -1895,8 +1970,8 @@ with open(file_output_path, mode='w', newline='') as file:
                          Comp_CO2_eq_SCW) + Comp_transp_emissions_MSW + Comp_transp_emissions_SCW, 3),
                      round(sum(Comp_CO2_eq_min_MSW) + sum(
                          Comp_CO2_eq_min_SCW) + Comp_transp_emissions_MSW + Comp_transp_emissions_SCW, 3),
-                    round(sum(Comp_CO2_eq_max_MSW) + sum(
-                        Comp_CO2_eq_max_SCW) + Comp_transp_emissions_MSW + Comp_transp_emissions_SCW, 3)])
+                     round(sum(Comp_CO2_eq_max_MSW) + sum(
+                         Comp_CO2_eq_max_SCW) + Comp_transp_emissions_MSW + Comp_transp_emissions_SCW, 3)])
     writer.writerow(['Material Recovery:',
                      round(sum(Comp_compost_mass_MSW) + sum(Comp_compost_mass_SCW), 3),
                      round(sum(Comp_compost_mass_min_MSW) + sum(Comp_compost_mass_min_SCW), 3),
@@ -1970,6 +2045,23 @@ with open(file_output_path, mode='w', newline='') as file:
     else:
         writer.writerow(['Energy Recovery', 'System does not have an energy recovery component'])
 
+    # FOD Results
+    writer.writerow([])
+    writer.writerow(['FOD Analysis Results---------------------------------------------------------------------------'])
+    if Flag_FOD == True:
+        for i in range(len(FOD_CH4_emissions)):
+            writer.writerow([])
+            writer.writerow(['Category ' + str(i + 1)])
+            writer.writerow(['t (years)', 'CH4 generation (tons)', 'Recovered CH4 (tons)', 'Flared CH4 (tons)',
+                             'Emissions (Tons of CO2 eq.)'])
+            for j in range(len(FOD_CH4_emissions[i])):
+                for k in range(len(FOD_CH4_emissions[i][j])):
+                    writer.writerow(
+                        [t_plot[j][k], FOD_CH4_emissions[i][j][k], FOD_CH4_recovered[i][j][k], FOD_CH4_flared[i][j][k],
+                         FOD_CO2eq[i][j][k]])
+    else:
+        writer.writerow(['No FOD analysis performed'])
+
 print('CSV file created successfully.')
 
 
@@ -1993,6 +2085,10 @@ def Backup_choice():
         # Copy the inventory file to the backup directory
         shutil.copy(os.path.join(directory_path_inventory, file_name_inventory_excel),
                     os.path.join(backup_directory, backup_file_name))
+
+        # Copy the Assumptions file to the backup directory
+        shutil.copy(os.path.join(directory_path_inventory, file_name_assumptions_excel),
+                    os.path.join(backup_directory, backup_file2_name))
 
         # Display a pop-up window with a message
         messagebox.showinfo("Backup settings", "Original Backup overwritten by Main directory File")
