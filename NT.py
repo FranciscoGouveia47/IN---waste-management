@@ -519,10 +519,13 @@ for i in range((find_indices(assumptions_data, 'Table 8: Landfill Parameters')[0
         (assumptions_data[i][(find_indices(assumptions_data, 'Table 8: Landfill Parameters')[0][1] + 1)]))
 
 table9_assumptions = []
-for i in range((find_indices(assumptions_data, 'Table 9: Gasification Parameters')[0][0] + 1),
+for i in range((find_indices(assumptions_data, 'Table 9: Gasification Parameters')[0][0] + 2),
                (find_indices(assumptions_data, 'Table 10: Recycling Parameters')[0][0]) - 2 + 1):
-    table9_assumptions.append(
-        (assumptions_data[i][(find_indices(assumptions_data, 'Table 9: Gasification Parameters')[0][1] + 1)]))
+    row = []
+    for j in range((find_indices(assumptions_data, 'Table 9: Gasification Parameters')[0][1]) + 1,
+                   (find_indices(assumptions_data, 'N2')[0][1]) + 1):
+        row.append(assumptions_data[i][j])
+    table9_assumptions.append(row)
 
 table10_assumptions = []
 for i in range((find_indices(assumptions_data, 'Table 10: Recycling Parameters')[0][0] + 2),
@@ -947,7 +950,68 @@ print('Material recovery: ' + str(
     round(sum(AD_CH4_recovered_max_MSW) + sum(AD_CH4_recovered_max_SCW), 3)) + ' Tons of CH4 recovered')
 print('Energy recovery: Not Applicable')
 print('---------------------------------------------------------------------------------------------------------------')
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+# @@@@@@@@@@ Gasification @@@@@@@@@@ Gasification @@@@@@@@@@ Gasification @@@@@@@@@@ Gasification @@@@@@@@@@ Gasificatio
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+# -----------------------------------------------------------------------------------------------------------------------
+# MSW SECTION------MSW SECTION------MSW SECTION------MSW SECTION------MSW SECTION------MSW SECTION------MSW SECTION-----
+GAS_MSW_total_mass = 0
+GAS_MSW_total_mass_dry = 0
+GAS_MSW_percentages = [0] * len(mass_matrix_MSW)
+for i in range(len(mass_matrix_MSW)):
+    GAS_MSW_total_mass += mass_matrix_MSW[i][-1]
+    GAS_MSW_total_mass_dry += Mass_dry_MSW[i][-1]
+for i in range(len(mass_matrix_MSW)):
+    GAS_MSW_percentages[i] = mass_matrix_MSW[i][-1] / GAS_MSW_total_mass
 
+GAS_syngas_composition_MSW = []
+if GAS_MSW_percentages[2] > 0.25:
+    for i in range(len(table9_assumptions[1])):
+        average_value = (table9_assumptions[1][i] + table9_assumptions[2][i]) / 2
+        GAS_syngas_composition_MSW.append(average_value)
+
+elif GAS_MSW_percentages[3] + GAS_MSW_percentages[4] > 0.25:
+    GAS_syngas_composition_MSW = table9_assumptions[2]
+else:
+    GAS_syngas_composition_MSW = table9_assumptions[0]
+
+GAS_syngas_mass_MSW = GAS_MSW_total_mass_dry * table9_assumptions[-1][0]
+
+# ----------------------------------------------------------------------------------------------------------------------
+# SCW SECTION------SCW SECTION------SCW SECTION------SCW SECTION------SCW SECTION------SCW SECTION------SCW SECTION-----
+GAS_SCW_total_mass = 0
+GAS_SCW_total_mass_dry = 0
+GAS_SCW_percentages = [0] * len(mass_matrix_SCW)
+for i in range(len(mass_matrix_SCW)):
+    GAS_SCW_total_mass += mass_matrix_SCW[i][0]
+    GAS_SCW_total_mass_dry += Mass_dry_SCW[i][0]
+for i in range(len(mass_matrix_SCW)):
+    GAS_SCW_percentages[i] = mass_matrix_SCW[i][0] / GAS_SCW_total_mass
+
+GAS_syngas_composition_SCW = []
+if GAS_SCW_percentages[7] + GAS_SCW_percentages[8] > GAS_SCW_percentages[6]:
+    GAS_syngas_composition_SCW = table9_assumptions[2]
+else:
+    GAS_syngas_composition_SCW = table9_assumptions[1]
+
+GAS_syngas_mass_SCW = GAS_SCW_total_mass_dry * table9_assumptions[-1][0]
+
+print()
+print('---------------Gasification Results----------------------------------------------------------------------------')
+print('<MSW Results>')
+print('Syngas composition: ' + str(GAS_syngas_composition_MSW[0]) + '% H2, ' + str(
+    GAS_syngas_composition_MSW[1]) + '% CO, ' + str(GAS_syngas_composition_MSW[2]) + '% CO2, ' + str(
+    GAS_syngas_composition_MSW[3]) + '% CH4, ' + str(GAS_syngas_composition_MSW[4]) + '% N2')
+print('Syngas produced(tons): ' + str(GAS_syngas_mass_MSW))
+print()
+
+print('<SCW Results>')
+print('Syngas composition: ' + str(GAS_syngas_composition_SCW[0]) + '% H2, ' + str(
+    GAS_syngas_composition_SCW[1]) + '% CO, ' + str(GAS_syngas_composition_SCW[2]) + '% CO2, ' + str(
+    GAS_syngas_composition_SCW[3]) + '% CH4, ' + str(GAS_syngas_composition_SCW[4]) + '% N2')
+print('Syngas produced(tons): ' + str(GAS_syngas_mass_SCW))
+print()
+print('---------------------------------------------------------------------------------------------------------------')
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 # @@@@@@@@@@Landfill@@@@@@@@@@Landfill@@@@@@@@@@Landfill@@@@@@@@@@Landfill@@@@@@@@@@Landfill@@@@@@@@@@Landfill@@@@@@@@@@
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -2018,6 +2082,18 @@ with open(file_output_path, mode='w', newline='') as file:
                      round(sum(AD_CH4_recovered_min_MSW) + sum(AD_CH4_recovered_min_SCW), 3),
                      round(sum(AD_CH4_recovered_max_MSW) + sum(AD_CH4_recovered_max_SCW), 3)])
 
+    # Gasification Results
+    writer.writerow([])
+    writer.writerow(['Gasification Results---------------------------------------------------------------------------'])
+    writer.writerow(['MSW Results'])
+    writer.writerow(['Syngas mass (ton)', 'H2 %', 'CO %', 'CO2 %', 'CH4 %', 'N2 %'])
+    writer.writerow([GAS_syngas_mass_MSW, GAS_syngas_composition_MSW[0], GAS_syngas_composition_MSW[1],
+                     GAS_syngas_composition_MSW[2], GAS_syngas_composition_MSW[3], GAS_syngas_composition_MSW[4]])
+    writer.writerow([])
+    writer.writerow(['SCW Results'])
+    writer.writerow(['Syngas mass (ton)', 'H2 %', 'CO %', 'CO2 %', 'CH4 %', 'N2 %'])
+    writer.writerow([GAS_syngas_mass_SCW, GAS_syngas_composition_SCW[0], GAS_syngas_composition_SCW[1],
+                     GAS_syngas_composition_SCW[2], GAS_syngas_composition_SCW[3], GAS_syngas_composition_SCW[4]])
     # Landfill Results
     writer.writerow([])
     writer.writerow(['Landfill Results-------------------------------------------------------------------------------'])
