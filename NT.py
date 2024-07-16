@@ -523,7 +523,7 @@ for i in range((find_indices(assumptions_data, 'Table 9: Gasification Parameters
                (find_indices(assumptions_data, 'Table 10: Recycling Parameters')[0][0]) - 2 + 1):
     row = []
     for j in range((find_indices(assumptions_data, 'Table 9: Gasification Parameters')[0][1]) + 1,
-                   (find_indices(assumptions_data, 'N2')[0][1]) + 1):
+                   (find_indices(assumptions_data, 'N2 %')[0][1]) + 1):
         row.append(assumptions_data[i][j])
     table9_assumptions.append(row)
 
