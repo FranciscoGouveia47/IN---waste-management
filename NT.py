@@ -270,12 +270,14 @@ for i in range(find_indices(inventory_data, 'A1')[0][0], find_indices(inventory_
     percentage_total_MSW += inventory_data[i][find_indices(inventory_data, 'Mass %')[0][1]]
     mass_total_MSW += inventory_data[i][find_indices(inventory_data, 'Mass (t)')[0][1]]
     mass_percentage_MSW.append(inventory_data[i][find_indices(inventory_data, 'Mass %')[0][1]])
-    mass_MSW.append(inventory_data[i][find_indices(inventory_data, 'Mass (t)')[0][1]])
+    mass_MSW.append(round(inventory_data[i][find_indices(inventory_data, 'Mass (t)')[0][1]],6))
+
+
 
 print('-------------')
-if percentage_total_MSW == 100 and round(mass_total_MSW, 3) == round(inventory_data[1][0], 3):
+if round(percentage_total_MSW, 5) == 100 and round(mass_total_MSW, 5) == round(inventory_data[1][0], 5):
     print('Check 1A done')
-elif percentage_total_MSW != 100 and round(mass_total_MSW, 3) == round(inventory_data[1][0], 3):
+elif round(percentage_total_MSW, 5) != 100 and round(mass_total_MSW, 5) == round(inventory_data[1][0], 5):
     print('MSW percentage sum is not 100% =>' + str(percentage_total_MSW))
     sys.exit("Stopping execution. Failed Check 1A")
 else:
@@ -288,7 +290,10 @@ mass_total_SCW = 0
 mass_SCW = []
 
 for i in range(find_indices(inventory_data, 'B1')[0][0], find_indices(inventory_data, 'BT1')[0][0]):
-    percentage_total_SCW += inventory_data[i][find_indices(inventory_data, 'Mass %')[1][1]]
+    try:
+        percentage_total_SCW += float(inventory_data[i][find_indices(inventory_data, 'Mass %')[1][1]])
+    except (TypeError, ValueError):
+        pass
     mass_total_SCW += inventory_data[i][find_indices(inventory_data, 'Mass (t)')[1][1]]
     mass_percentage_SCW.append(inventory_data[i][find_indices(inventory_data, 'Mass %')[1][1]])
     mass_SCW.append(inventory_data[i][find_indices(inventory_data, 'Mass (t)')[1][1]])
@@ -297,7 +302,10 @@ print()
 if percentage_total_SCW == 100 and round(mass_total_SCW, 3) == round(
         inventory_data[find_indices(inventory_data, 'Sep. Collected Waste total mass (t)')[0][0] + 1][0], 3):
     print('Check 1B done')
-elif percentage_total_SCW != 100 and round(mass_total_SCW, 3) == round(inventory_data[47][0], 3):
+elif percentage_total_SCW == 0 and round(mass_total_SCW, 3) == round(
+        inventory_data[find_indices(inventory_data, 'Sep. Collected Waste total mass (t)')[0][0] + 1][0], 3):
+    print('Check 1B done')
+elif percentage_total_SCW != 100 and mass_total_SCW == inventory_data[37][0]:
     print('SCW percentage sum is not 100% =>' + str(percentage_total_SCW))
     sys.exit("Stopping execution. Failed Check 1B")
 else:
@@ -962,7 +970,8 @@ for i in range(len(mass_matrix_MSW)):
     GAS_MSW_total_mass += mass_matrix_MSW[i][-1]
     GAS_MSW_total_mass_dry += Mass_dry_MSW[i][-1]
 for i in range(len(mass_matrix_MSW)):
-    GAS_MSW_percentages[i] = mass_matrix_MSW[i][-1] / GAS_MSW_total_mass
+    if GAS_MSW_total_mass != 0:
+        GAS_MSW_percentages[i] = mass_matrix_MSW[i][-1] / GAS_MSW_total_mass
 
 GAS_syngas_composition_MSW = []
 if GAS_MSW_percentages[2] > 0.25:
@@ -986,7 +995,8 @@ for i in range(len(mass_matrix_SCW)):
     GAS_SCW_total_mass += mass_matrix_SCW[i][0]
     GAS_SCW_total_mass_dry += Mass_dry_SCW[i][0]
 for i in range(len(mass_matrix_SCW)):
-    GAS_SCW_percentages[i] = mass_matrix_SCW[i][0] / GAS_SCW_total_mass
+    if GAS_SCW_total_mass != 0:
+        GAS_SCW_percentages[i] = mass_matrix_SCW[i][0] / GAS_SCW_total_mass
 
 GAS_syngas_composition_SCW = []
 if GAS_SCW_percentages[7] + GAS_SCW_percentages[8] > GAS_SCW_percentages[6]:
@@ -1336,7 +1346,7 @@ def FOD_Landfill():
             combobox_label = tk.Label(window, text="How many waste deposits will be done during the simulation:")
             combobox_label.pack()
 
-            combobox = ttk.Combobox(window, values=list(range(11)), state="readonly")
+            combobox = ttk.Combobox(window, values=list(range(16)), state="readonly")
             combobox.current(0)
             combobox.pack()
             return combobox
@@ -1395,8 +1405,8 @@ def FOD_Landfill():
             data_entry_window = tk.Toplevel(window)
             data_entry_window.title("Waste Category Input")
 
-            # Create a new label and entry field for total mass (dry basis)
-            total_mass_label = tk.Label(data_entry_window, text="Total Mass (Dry Basis)")
+            # Create a new label and entry field for total mass (WET basis)
+            total_mass_label = tk.Label(data_entry_window, text="Total Mass (Wet Basis)")
             total_mass_label.grid(row=0, columnspan=2, padx=10, pady=5)
             total_mass_entry = tk.Entry(data_entry_window)
             total_mass_entry.grid(row=1, columnspan=2, padx=10, pady=5)
@@ -1597,7 +1607,8 @@ slider_texts = ["Time between t0 to t1 (months)", "Time between t1 to t2 (months
                 "Time between t3 to t4 (months)",
                 "Time between t4 to t5 (months)", "Time between t5 to t6 (months)", "Time between t6 to t7 (months)",
                 "Time between t7 to t8 (months)",
-                'Time between t8 to t9 (months)', 'Time between t9 to t10 (months)']  # Custom text for each slider
+                'Time between t8 to t9 (months)', 'Time between t9 to t10 (months)', 'Time between t10 to t11 (months)', 'Time between t11 to t12 (months)',
+                'Time between t12 to t13 (months)', 'Time between t13 to t14 (months)', 'Time between t14 to t15 (months)']  # Custom text for each slider
 
 waste_data = []  # Define waste_data list to store waste data for each slider
 FOD_data = []
@@ -1641,15 +1652,15 @@ if Flag_FOD == True:
         row_min = []
         row_max = []
         for j in range(len(FOD_waste_mass[0])):
-            row.append(FOD_waste_mass[i][j] * table1_assumptions[j][4] / 100)
-            row_min.append(FOD_waste_mass[i][j] * table1_assumptions[j][5] / 100)
-            row_max.append(FOD_waste_mass[i][j] * table1_assumptions[j][6] / 100)
+            row.append(FOD_waste_mass[i][j] * table1_assumptions[j][1] / 100)
+            row_min.append(FOD_waste_mass[i][j] * table1_assumptions[j][2] / 100)
+            row_max.append(FOD_waste_mass[i][j] * table1_assumptions[j][3] / 100)
         FOD_DOCi_Wi.append(row)
         FOD_DOCi_Wi_min.append(row_min)
         FOD_DOCi_Wi_max.append(row_max)
     zero_array = [0] * len(category_names_MSW)
     FOD_DOCi_Wi.append(zero_array)
-    slider_values.append(360)
+    slider_values.append(60)
     for i in range(len(FOD_DOCi_Wi)):
         if FOD_DOCi_Wi[i] == []:
             FOD_DOCi_Wi[i] = zero_array
@@ -1661,15 +1672,15 @@ if Flag_FOD == True:
         # If conversion fails or FOD_data[1] is not available, set it to 0
         FOD_data[1] = 0
 
-    og_category_dic = {'Paper/Cardboard': 23.2,
-                       'Textiles': 3.9,
-                       'Food waste': 33.9,
-                       'Wood': 8.2,
-                       'Garden and Park waste': 9.8,
-                       'Rubber and Leather': 1.4,
-                       'Plastics': 8.5,
-                       'Metal': 4.6,
-                       'Glass': 6.5}
+    og_category_dic = {'Paper/Cardboard': 8.56,
+                       'Textiles': 16.12,
+                       'Food waste': 32.73,
+                       'Wood': 2.67,
+                       'Garden and Park waste': 13.65,
+                       'Rubber and Leather': 3.6,
+                       'Plastics': 16.12,
+                       'Metal': 0.42,
+                       'Glass': 6.15}
 
     Bulk_percentage_dic = {}
 
@@ -2114,10 +2125,10 @@ with open(file_output_path, mode='w', newline='') as file:
     # Incineration Results
     writer.writerow([])
     writer.writerow(['Incineration Results---------------------------------------------------------------------------'])
-    writer.writerow(['GHG Emissions (Fossil Carbon)', round(INC_total_emissions, 3)])
-    writer.writerow(['GHG Emissions (Total Carbon content)', round(INC_total_emissions_all_C, 3)])
+    writer.writerow(['GHG Emissions (Fossil Carbon) [Tons of CO2 eq]', round(INC_total_emissions, 3)])
+    writer.writerow(['GHG Emissions (Total Carbon content) [Tons of CO2 eq]', round(INC_total_emissions_all_C, 3)])
     if INC_flag:
-        writer.writerow(['Energy Recovery', round(INC_energy_recovered, 3)])
+        writer.writerow(['Energy Recovery [MJ]', round(INC_energy_recovered, 3)])
     else:
         writer.writerow(['Energy Recovery', 'System does not have an energy recovery component'])
 
